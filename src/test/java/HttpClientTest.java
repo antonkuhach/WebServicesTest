@@ -1,3 +1,7 @@
+import com.google.gson.Gson;
+import entity.Gist;
+import entity.GistFile;
+import entity.GistFilePack;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -6,16 +10,14 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.List;
 
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.assertEquals;
 
 public class HttpClientTest {
     private static final String OAUTH_TOKEN_PART1 = "460d21f87293522bf6d";
@@ -28,42 +30,42 @@ public class HttpClientTest {
     private CloseableHttpClient httpClient;
     private String result;
     private List<NameValuePair> loginParams;
+    private Gson gson;
+    private Gist gist;
 
     @BeforeTest
-    public void setup() {
+    public void setup() throws IOException {
+        httpResponse = null;
+        String description = "Brand new description!";
+        String content = "Brand new content!";
+        gist = new Gist();
+        gist.setDescription(description);
+        gist.setA(true);
+        gist.setFiles(new GistFilePack());
+        gist.getFiles().setFile(new GistFile());
+        gist.getFiles().getFile().setContent(content);
+        gson = new Gson();
         httpClient = HttpClients.createDefault();
-        loginParams = new ArrayList<NameValuePair>(1);
-        httpGet = new HttpGet("https://api.github.com/user?access_token=" + OAUTH_TOKEN_PART1 + OAUTH_TOKEN_PART2);
     }
 
     @Test
-    public void createGistTest() {
-        httpPost = new HttpPost("https://gist.github.com/gists");
-        StringEntity entityParams = null;
-        try {
-            entityParams = new StringEntity("{\n" +
-                    "  \"description\": \"brand new gist\",\n" +
-                    "  \"public\": true,\n" +
-                    "  \"files\": {\n" +
-                    "    \"file1.txt\": {\n" +
-                    "      \"content\": \"65432\"\n" +
-                    "    }\n" +
-                    "  }\n" +
-                    "}");
-        } catch (UnsupportedEncodingException ex) {
-            ex.printStackTrace();
-        }
-        httpPost.setEntity(entityParams);
-        httpGet = new HttpGet("https://gist.github.com/users/:antonkuhach/gists");
-        try {
-            httpResponse = httpClient.execute(httpGet);
-            receivedEntity = httpResponse.getEntity();
-            result = EntityUtils.toString(receivedEntity);
-            System.out.println(result);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+    public void loginTest() throws IOException {
+        httpGet = new HttpGet("https://api.github.com/user");
+        httpGet.setHeader("Authorization", "token " + OAUTH_TOKEN_PART1 + OAUTH_TOKEN_PART2);
+        httpResponse = httpClient.execute(httpGet);
+        assertEquals(httpResponse.getStatusLine().getStatusCode(), 200);
+    }
 
-        assertTrue(true);
+    @Test
+    public void createGistTest() throws IOException, UnsupportedEncodingException {
+        httpPost = new HttpPost("https://api.github.com/gists");
+        StringEntity entityString = null;
+
+        entityString = new StringEntity(gson.toJson(gist));
+        httpPost.setEntity(entityString);
+        httpPost.setHeader("Authorization", "token " + OAUTH_TOKEN_PART1 + OAUTH_TOKEN_PART2);
+        httpResponse = httpClient.execute(httpPost);
+        gist = (Gist) httpResponse.getEntity();
+        assertEquals(httpResponse.getStatusLine().getStatusCode(), 201);
     }
 }
