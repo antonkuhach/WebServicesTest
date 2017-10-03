@@ -1,5 +1,7 @@
 package entity;
 
+import org.json.JSONObject;
+
 public class User {
     private String login;
     private int id;
@@ -18,6 +20,76 @@ public class User {
     private String received_events_url;
     private String type;
     private String site_admin;
+
+    public void setParameters(JSONObject jsonObject) {
+        if(jsonObject.get("login") != null) {
+            this.setLogin(jsonObject.get("login").toString());
+        }
+
+        if(jsonObject.get("id") != null) {
+            this.setId(Integer.parseInt(jsonObject.get("id").toString()));
+        }
+
+        if(jsonObject.get("avatar_url") != null) {
+            this.setAvatar_url(jsonObject.get("avatar_url").toString());
+        }
+
+        if(jsonObject.get("gravatar_id") != null) {
+            this.setGravatar_id(jsonObject.get("gravatar_id").toString());
+        }
+
+        if(jsonObject.get("url") != null) {
+            this.setUrl(jsonObject.get("url").toString());
+        }
+
+        if(jsonObject.get("html_url") != null) {
+            this.setHtml_url(jsonObject.get("html_url").toString());
+        }
+
+        if(jsonObject.get("followers_url") != null) {
+            this.setFollowers_url(jsonObject.get("followers_url").toString());
+        }
+
+        if(jsonObject.get("following_url") != null) {
+            this.setFollowing_url(jsonObject.get("following_url").toString());
+        }
+
+        if(jsonObject.get("gists_url") != null) {
+            this.setGists_url(jsonObject.get("gists_url").toString());
+        }
+
+        if(jsonObject.get("starred_url") != null) {
+            this.setStarred_url(jsonObject.get("starred_url").toString());
+        }
+
+        if(jsonObject.get("subscriptions_url") != null) {
+            this.setSubscriptions_url(jsonObject.get("subscriptions_url").toString());
+        }
+
+        if(jsonObject.get("organizations_url") != null) {
+            this.setOrganizations_url(jsonObject.get("organizations_url").toString());
+        }
+
+        if(jsonObject.get("repos_url") != null) {
+            this.setRepos_url(jsonObject.get("repos_url").toString());
+        }
+
+        if(jsonObject.get("events_url") != null) {
+            this.setEvents_url(jsonObject.get("events_url").toString());
+        }
+
+        if(jsonObject.get("received_events_url") != null) {
+            this.setReceived_events_url(jsonObject.get("received_events_url").toString());
+        }
+
+        if(jsonObject.get("type") != null) {
+            this.setType(jsonObject.get("type").toString());
+        }
+
+        if(jsonObject.get("site_admin") != null) {
+            this.setSite_admin(jsonObject.get("site_admin").toString());
+        }
+    }
 
     public String getLogin() {
         return login;

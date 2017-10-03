@@ -1,6 +1,11 @@
 package entity;
 
 import com.google.gson.annotations.SerializedName;
+import org.apache.http.HttpResponse;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONObject;
+
+import java.io.IOException;
 
 public class Gist {
     private String url;
@@ -24,6 +29,52 @@ public class Gist {
     private GistForks forks;
     private GistChangeStatus change_status;
     private String committed_at;
+
+    public void setParameters(HttpResponse httpResponse) throws IOException {
+        JSONObject jsonObject;
+        String jsonString;
+
+        jsonString = EntityUtils.toString(httpResponse.getEntity());
+        jsonObject = new JSONObject(jsonString);
+
+        if(jsonObject.get("url") != null) {
+            this.setUrl(jsonObject.get("url").toString());
+        }
+
+        if(jsonObject.get("forks_url") != null) {
+            this.setForks_url(jsonObject.get("forks_url").toString());
+        }
+
+        if(jsonObject.get("commits_url") != null) {
+            this.setComments_url(jsonObject.get("commits_url").toString());
+        }
+
+        if(jsonObject.get("id") != null) {
+            this.setId(jsonObject.get("id").toString());
+        }
+
+        if(jsonObject.get("description") != null) {
+            this.setDescription(jsonObject.get("description").toString());
+        }
+
+        if(jsonObject.get("public") != null) {
+            this.setA(Boolean.parseBoolean(jsonObject.get("public").toString()));
+        }
+
+        if(jsonObject.getJSONObject("owner") != null) {
+            this.getOwner().setParameters(jsonObject.getJSONObject("owner"));
+        }
+
+        if(jsonObject.getJSONObject("user") != null) {
+            this.getUser().setParameters(jsonObject.getJSONObject("user"));
+        }
+
+        if(jsonObject.get("public") != null) {
+            this.setA(Boolean.parseBoolean(jsonObject.get("public").toString()));
+        }
+
+
+    }
 
     public String getUrl() {
         return url;

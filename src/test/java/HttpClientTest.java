@@ -65,7 +65,8 @@ public class HttpClientTest {
         httpPost.setEntity(entityString);
         httpPost.setHeader("Authorization", "token " + OAUTH_TOKEN_PART1 + OAUTH_TOKEN_PART2);
         httpResponse = httpClient.execute(httpPost);
-        gist = (Gist) httpResponse.getEntity();
+        gist.setParameters(httpResponse);
+        System.out.println(gist.getId());
         assertEquals(httpResponse.getStatusLine().getStatusCode(), 201);
     }
 }

@@ -1,5 +1,7 @@
 package entity;
 
+import org.json.JSONObject;
+
 public class GistFile {
     private int size;
     private String raw_url;
@@ -7,6 +9,32 @@ public class GistFile {
     private String language;
     private boolean truncated;
     private String content;
+
+    public void setParameters(JSONObject jsonObject) {
+        if(jsonObject.get("size") != null) {
+            this.setSize(Integer.parseInt(jsonObject.get("size").toString()));
+        }
+
+        if(jsonObject.get("raw_url") != null) {
+            this.setRaw_url(jsonObject.get("raw_url").toString());
+        }
+
+        if(jsonObject.get("type") != null) {
+            this.setType(jsonObject.get("type").toString());
+        }
+
+        if(jsonObject.get("language") != null) {
+            this.setLanguage(jsonObject.get("language").toString());
+        }
+
+        if(jsonObject.get("truncated") != null) {
+            this.setTruncated(Boolean.parseBoolean(jsonObject.get("truncated").toString()));
+        }
+
+        if(jsonObject.get("content") != null) {
+            this.setContent(jsonObject.get("content").toString());
+        }
+    }
 
     public int getSize() {
         return size;
