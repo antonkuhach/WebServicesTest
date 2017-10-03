@@ -69,11 +69,53 @@ public class Gist {
             this.getUser().setParameters(jsonObject.getJSONObject("user"));
         }
 
-        if(jsonObject.get("public") != null) {
-            this.setA(Boolean.parseBoolean(jsonObject.get("public").toString()));
+        if(jsonObject.getJSONObject("files") != null) {
+            this.getFiles().setFile(jsonObject.getJSONObject("files"));
         }
 
+        if(jsonObject.get("truncated") != null) {
+            this.setTruncated(Boolean.parseBoolean(jsonObject.get("truncated").toString()));
+        }
 
+        if(jsonObject.get("comments") != null) {
+            this.setComments(Integer.parseInt(jsonObject.get("comments").toString()));
+        }
+
+        if(jsonObject.get("comments_url") != null) {
+            this.setComments_url(jsonObject.get("comments_url").toString());
+        }
+
+        if(jsonObject.get("html_url") != null) {
+            this.setHtml_url(jsonObject.get("html_url").toString());
+        }
+
+        if(jsonObject.get("git_pull_url") != null) {
+            this.setGit_pull_url(jsonObject.get("git_pull_url").toString());
+        }
+
+        if(jsonObject.get("git_push_url") != null) {
+            this.setGit_push_url(jsonObject.get("git_push_url").toString());
+        }
+
+        if(jsonObject.get("created_at") != null) {
+            this.setCreated_at(jsonObject.get("created_at").toString());
+        }
+
+        if(jsonObject.get("updated_at") != null) {
+            this.setUpdated_at(jsonObject.get("updated_at").toString());
+        }
+
+        if(jsonObject.getJSONObject("forks") != null) {
+            this.getForks().setParameters(jsonObject.getJSONObject("forks"));
+        }
+
+        if(jsonObject.getJSONObject("change_status") != null) {
+            this.getChange_status().setParameters(jsonObject.getJSONObject("change_status"));
+        }
+
+        if(jsonObject.get("committed_at") != null) {
+            this.setCommitted_at(jsonObject.get("committed_at").toString());
+        }
     }
 
     public String getUrl() {
