@@ -14,6 +14,9 @@ public class GistFilePack {
     }
 
     public void setFile(JSONObject jsonObject) {
+        if(this.file == null){
+            this.setFile(new GistFile());
+        }
         this.file.setParameters(jsonObject);
     }
 }

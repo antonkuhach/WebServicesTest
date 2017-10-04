@@ -6,6 +6,8 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Gist {
     private String url;
@@ -26,15 +28,12 @@ public class Gist {
     private String git_push_url;
     private String created_at;
     private String updated_at;
-    private GistForks forks;
+    private List<GistForks> forks;
     private GistChangeStatus change_status;
     private String committed_at;
 
-    public void setParameters(HttpResponse httpResponse) throws IOException {
+    public void setParameters(String jsonString) throws IOException {
         JSONObject jsonObject;
-        String jsonString;
-
-        jsonString = EntityUtils.toString(httpResponse.getEntity());
         jsonObject = new JSONObject(jsonString);
 
         if(jsonObject.get("url") != null) {
@@ -62,15 +61,22 @@ public class Gist {
         }
 
         if(jsonObject.getJSONObject("owner") != null) {
+            if(this.getOwner() == null) {
+                this.setOwner(new User());
+            }
             this.getOwner().setParameters(jsonObject.getJSONObject("owner"));
         }
 
         if(jsonObject.getJSONObject("user") != null) {
+            if(this.getUser() == null) {
+                this.setUser(new User());
+            }
             this.getUser().setParameters(jsonObject.getJSONObject("user"));
         }
 
         if(jsonObject.getJSONObject("files") != null) {
-            this.getFiles().setFile(jsonObject.getJSONObject("files"));
+            this.setFiles(new GistFilePack());
+            // TODO if custom deserialization needed
         }
 
         if(jsonObject.get("truncated") != null) {
@@ -106,10 +112,18 @@ public class Gist {
         }
 
         if(jsonObject.getJSONObject("forks") != null) {
-            this.getForks().setParameters(jsonObject.getJSONObject("forks"));
+            if(this.getForks() == null) {
+                this.setForks(new ArrayList<GistForks>());
+            }
+            for(GistForks fork : this.getForks()) {
+                fork.setParameters(jsonObject.getJSONObject("forks"));
+            }
         }
 
         if(jsonObject.getJSONObject("change_status") != null) {
+            if(this.getChange_status() == null) {
+                this.setChange_status(new GistChangeStatus());
+            }
             this.getChange_status().setParameters(jsonObject.getJSONObject("change_status"));
         }
 
@@ -254,11 +268,11 @@ public class Gist {
         this.updated_at = updated_at;
     }
 
-    public GistForks getForks() {
+    public List<GistForks> getForks() {
         return forks;
     }
 
-    public void setForks(GistForks forks) {
+    public void setForks(List<GistForks> forks) {
         this.forks = forks;
     }
 
